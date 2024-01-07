@@ -1,10 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.shortcuts import render
 from .models import Booking, Menu
 from .serializers import BookingSerializer, MenuSerializer
-from rest_framework import generics
+
 
 #API views
 # class bookingview(APIView):
@@ -19,9 +21,10 @@ from rest_framework import generics
 #         return Response(serializer.data)
 
 # ModelViewset per course instructions
-class bookingview(viewsets.ModelViewSet):
+class bookingview(viewsets.ModelViewSet): #Viewsets based views are registered using Router class
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
+    permission_classes = [IsAuthenticated]
 
 class menuview(APIView):
     def get (self, request):
@@ -32,3 +35,12 @@ class menuview(APIView):
 class singlemenuitemview(generics.RetrieveAPIView):
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
+
+    # List of permission classes
+    # permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.IsAdminUser]
+
+    # For Function bases views, use decorator
+    # @permission_classes([IsAuthenticated])
